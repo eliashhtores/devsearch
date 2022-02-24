@@ -2,10 +2,13 @@
 
 {% block content %}
 
-<h1>Single template</h1>
-<p>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi reprehenderit natus sed eaque voluptatibus illum animi
-    dolore, iure voluptate sapiente alias facere distinctio rerum non debitis, minima cum, dolorem ullam?
-</p>
+<h1>Project {{ project.title }}</h1>
+
+{% for tag in project.tags.all %}
+{{ tag.name }}
+<hr>
+{% endfor %}
+
+<p>{{ project.description }}</p>
 
 {% endblock content %}

@@ -1,3 +1,28 @@
 from django.contrib import admin
+from .models import Project, Review, Tag
 
-# Register your models here.
+
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'created')
+    list_filter = ('title', 'created')
+    search_fields = ('title', 'description')
+    ordering = ('-created',)
+
+
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('id', 'project', 'value', 'created')
+    list_filter = ('project', 'value', 'created')
+    search_fields = ('project', 'body')
+    ordering = ('-created',)
+
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'created')
+    list_filter = ('name', 'created')
+    search_fields = ('name',)
+    ordering = ('-created',)
+
+
+admin.site.register(Project, ProjectAdmin)
+admin.site.register(Review, ReviewAdmin)
+admin.site.register(Tag, TagAdmin)

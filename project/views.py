@@ -1,10 +1,14 @@
 from django.shortcuts import render
+from .models import Project
 
 
 def projects(request):
-    msg = 'Hello from the main page'
-    return render(request, 'project/projects.html', {'msg': msg})
+    projects = Project.objects.all()
+    context = {'projects': projects}
+    return render(request, 'project/projects.html', context)
 
 
 def project(request, pk):
-    return render(request, 'project/single.html')
+    project = Project.objects.get(pk=pk)
+    context = {'project': project}
+    return render(request, 'project/single.html', context)
