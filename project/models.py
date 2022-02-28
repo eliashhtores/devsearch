@@ -1,10 +1,13 @@
-from django.db import models
 import uuid
+from django.db import models
+from developer.models import Developer
 
 
 class Project(models.Model):
     id = models.UUIDField(default=uuid.uuid4,
                           primary_key=True, unique=True, editable=False)
+    owner = models.ForeignKey(Developer, null=True,
+                              blank=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, unique=True)
     description = models.TextField(null=True, blank=True)
     featured_image = models.ImageField(

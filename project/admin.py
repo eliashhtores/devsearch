@@ -3,9 +3,9 @@ from .models import Project, Review, Tag
 
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'created')
-    list_filter = ('title', 'created')
-    search_fields = ('title', 'description')
+    list_display = ('id', 'title', 'owner', 'created')
+    list_filter = ('title', 'owner', 'created')
+    search_fields = ('title', 'owner', 'description')
     ordering = ('-created',)
 
 
