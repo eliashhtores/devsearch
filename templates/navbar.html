@@ -16,8 +16,16 @@
                 <li class="header__menuItem"><a href="{% url 'developer:profiles' %}">Developers</a></li>
                 <li class="header__menuItem"><a href="{% url 'project:projects' %}">Projects</a></li>
                 <li class="header__menuItem"><a href="#">Inbox</a></li>
+                {% if request.user.is_authenticated %}
                 <li class="header__menuItem"><a href="{% url 'project:create_project' %}">Add Project</a></li>
-                <li class="header__menuItem"><a href="#" class="btn btn--sub">Login/Sign Up</a></li>
+                <li class="header__menuItem">
+                    <a href="{% url 'developer:logout' %}" class="btn btn--sub">Logout</a>
+                </li>
+                {% else %}
+                <li class="header__menuItem">
+                    <a href="{% url 'developer:login' %}" class="btn btn--sub">Login/SignUp</a>
+                </li>
+                {% endif %}
             </ul>
         </nav>
     </div>
