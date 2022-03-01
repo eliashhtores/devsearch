@@ -13,7 +13,7 @@ def profiles(request):
 def profile(request, pk):
     developer = Developer.objects.get(pk=pk)
     top_skills = developer.skill_set.exclude(description__exact='')
-    other_skills = developer.skill_set.filter(description='')
+    other_skills = developer.skill_set.filter(description='')[:5]
     context = {'developer': developer,
                'top_skills': top_skills, 'other_skills': other_skills}
     template_name = 'developer/profile.html'
