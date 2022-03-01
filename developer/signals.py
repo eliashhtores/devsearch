@@ -1,7 +1,16 @@
+
 def create_developer(sender, instance, created, **kwargs):
+    from developer.models import Developer
     if created:
-        Developer.objects.create(user=instance)
+        user = instance
+        developer = Developer.objects.create(
+            user=user,
+            username=user.username,
+            email=user.email,
+            name=user.first_name + ' ' + user.last_name,
+        )
+        return developer
 
 
-# def developer_deleted(sender, instance, **kwargs):
-#     print('Deletion signal sent!')
+def delete_developer(sender, instance, **kwargs):
+    instance.user.delete()

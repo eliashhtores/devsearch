@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'project',
     'developer',
+
 ]
 
 MIDDLEWARE = [
@@ -31,7 +32,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'devsearch.urls'
-# 'DIRS': [BASE_DIR.child("templates")],
 
 TEMPLATES = [
     {
