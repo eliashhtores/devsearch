@@ -1,6 +1,10 @@
 from django.db import models
+from django.db.models.signals import post_save, post_delete
 from django.contrib.auth.models import User
 import uuid
+# from .signals import create_developer
+
+from django.db.models.signals import post_save
 
 
 class Developer(models.Model):
@@ -26,6 +30,14 @@ class Developer(models.Model):
 
     def __str__(self):
         return str(self.user.username)
+
+
+def create_developer(sender, instance, created, **kwargs):
+    if created:
+        Developer.objects.create(user=instance)
+
+
+post_save.connect(create_developer, sender=User)
 
 
 class Skill(models.Model):
