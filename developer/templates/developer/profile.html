@@ -11,7 +11,7 @@
                     <div class="card__body dev">
                         <img class="avatar avatar--xl" src="{{ developer.profile_image.url }}" />
                         <h2 class="dev__name">{{ developer.name }}</h2>
-                        <p class="dev__title">{{ developer.short_bio }}</p>
+                        <p class="dev__title">{{ developer.short_intro }}</p>
                         <p class="dev__location">Based in {{ developer.location }}</p>
                         <ul class="dev__social">
                             {% if developer.social_github %}

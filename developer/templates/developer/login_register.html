@@ -3,69 +3,88 @@
 
 {% block content %}
 
-<body>
-    <div class="auth">
-        {% if page == 'login' %}
-        <div class="card">
-            <div class="auth__header text-center">
-                <a href="#">
-                    <img src="{% static 'images/icon.svg' %}" alt="icon" />
-                </a>
-                <h3>Account Login</h3>
-                <p>Hello Developer, Welcome Back!</p>
+{% if page == 'login' %}
+<div class="auth">
+    <div class="card">
+        <div class="auth__header text-center">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert  alert--{{message.tags}}">
+                <p class="alert__message">{{message}}</p>
             </div>
-            <form action="{% url 'developer:login' %}" method="post">
-                {% csrf_token %}
-                <div class="form__field">
-                    <label for="formInput#text">Username: </label>
-                    <input class="input input--text" id="formInput#text" type="text" required name="username"
-                        placeholder="Enter your username..." />
-                </div>
-
-                <div class="form__field">
-                    <label for="formInput#password">Password: </label>
-                    <input class="input input--password" id="formInput#passowrd" type="password" required
-                        name="password" placeholder="••••••••" />
-                </div>
-                <div class="auth__actions">
-                    <input class="btn btn--sub btn--lg" type="submit" value="Log In" />
-                    <a href="forgetpassword.html">Forgot Password?</a>
-                </div>
-            </form>
-            <div class="auth__alternative">
-                <p>Don’t have an Account?</p>
-                <a href="{% url 'developer:register' %}">Sign Up</a>
-            </div>
+            {% endfor %}
+            {% endif %}
+            <br>
+            <a href="#">
+                <img src="{% static 'images/icon.svg' %}" alt="icon" />
+            </a>
+            <h3>Account Login</h3>
+            <p>Hello Developer, Welcome Back!</p>
         </div>
-        {% else %}
-        <div class="card">
-            <div class="auth__header text-center">
-                <a href="#">
-                    <img src="{% static 'images/icon.svg' %}" alt="icon" />
-                </a>
-                <h3>Register</h3>
-                <p>Create a new developer account</p>
+        <form action="{% url 'developer:login' %}" method="post" class="form auth__form">
+            {% csrf_token %}
+            <div class="form__field">
+                <label for="formInput#text">Username: </label>
+                <input class="input input--text" id="formInput#text" type="text" name="username"
+                    placeholder="Enter your username..." />
             </div>
 
-            <form action="{% url 'developer:register' %}" method="post" class="form auth__form">
-                {% csrf_token %}
-                <div class="form__field">
-                    {% for field in form %}
-                    <label for="formInput#text">{{ field.label }}: </label>
-                    {{field}}
-                    {% endfor %}
-                </div>
-                <div class="auth__actions">
-                    <input class="btn btn--sub btn--lg" type="submit" value="Sign  In" />
-                </div>
-            </form>
-            <div class="auth__alternative">
-                <p>Already have an Account?</p>
-                <a href="{% url 'developer:login' %}">Log In</a>
+            <div class="form__field">
+                <label for="formInput#password">Password: </label>
+                <input class="input input--password" id="formInput#passowrd" type="password" name="password"
+                    placeholder="••••••••" />
             </div>
+            <div class="auth__actions">
+                <input class="btn btn--sub btn--lg" type="submit" value="Log In" />
+                <a href="forgetpassword.html">Forgot Password?</a>
+            </div>
+        </form>
+        <div class="auth__alternative">
+            <p>Don’t have an Account?</p>
+            <a href="{% url 'developer:register' %}">Sign Up</a>
         </div>
-        {% endif %}
     </div>
-</body>
+</div>
+{% else %}
+<div class="auth">
+    <div class="card">
+        <div class="auth__header text-center">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert--{{message.tags}}">
+                <p class="alert__message">{{message}}</p>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <br>
+            <a href="#">
+                <img src="{% static 'images/icon.svg' %}" alt="icon" />
+            </a>
+            <h3>Register</h3>
+            <p>Create a new developer account</p>
+        </div>
+
+        <form action="{% url 'developer:register' %}" method="post" class="form auth__form">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form__field">
+                <label for="formInput#text">{{ field.label }}: </label>
+                {{field}}
+                {% for error in field.errors %}
+                <small class="danger">{{ error }}</small>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <div class="auth__actions">
+                <input class="btn btn--sub btn--lg" type="submit" value="Sign  In" />
+            </div>
+        </form>
+        <div class="auth__alternative">
+            <p>Already have an Account?</p>
+            <a href="{% url 'developer:login' %}">Log In</a>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}

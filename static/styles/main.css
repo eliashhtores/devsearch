@@ -1,7 +1,15 @@
-h1 {
+.danger {
     color: red;
 }
 
-p {
-    color: blue;
+.centered {
+    display: flex; 
+    align-content: center; 
+    justify-content: center;
+}
+
+.box {
+    max-width: 50%;
+    margin-left: 10px;
+    margin-right: 10px;
 }

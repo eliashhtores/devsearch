@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.contrib.auth.models import User
-from .signals import create_developer, delete_developer
+from .signals import create_developer, delete_developer, update_user
 
 
 class Developer(models.Model):
@@ -31,6 +31,7 @@ class Developer(models.Model):
 
 
 post_save.connect(create_developer, sender=User)
+post_save.connect(update_user, sender=Developer)
 post_delete.connect(delete_developer, sender=Developer)
 
 

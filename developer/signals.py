@@ -12,5 +12,16 @@ def create_developer(sender, instance, created, **kwargs):
         return developer
 
 
+def update_user(sender, instance, created, **kwargs):
+    developer = instance
+    user = developer.user
+    if created == False:
+        user.first_name = developer.name.split(' ')[0]
+        user.last_name = developer.name.split(' ')[1]
+        user.username = developer.username
+        user.email = developer.email
+        user.save()
+
+
 def delete_developer(sender, instance, **kwargs):
     instance.user.delete()
