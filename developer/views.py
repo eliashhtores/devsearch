@@ -3,10 +3,12 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Developer
+from .forms import CustomUserCreationForm
 
 
 def login_user(request):
     page = 'login'
+    context = {'page': page}
     if request.user.is_authenticated:
         return redirect('developer:profiles')
 
@@ -21,7 +23,7 @@ def login_user(request):
             messages.error(request, 'Invalid credentials')
 
     template_name = 'developer/login_register.html'
-    return render(request, template_name)
+    return render(request, template_name, context)
 
 
 def logout_user(request):
@@ -31,20 +33,22 @@ def logout_user(request):
 
 
 def register(request):
-    # if request.user.is_authenticated:
-    #     return redirect('developer:profiles')
+    form = CustomUserCreationForm()
 
-    # if request.method == 'POST':
-    #     username = request.POST['username']
-    #     password = request.POST['password']
-    #     email = request.POST['email']
-    #     first_name = request.POST['first_name']
-    #     last_name = request.POST['last_name']
-    #     developer = Developer.objects.create_user(
-    #         username, email, password, first_name, last_name)
-    #     developer.save()
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            messages.success(request, 'User was created')
+            login(request, user)
+            return redirect('developer:profiles')
+        else:
+            messages.error(request, 'An error has ocurred during registration')
+
     page = 'register'
-    context = {}
+    context = {'page': page, 'form': form}
     template_name = 'developer/login_register.html'
     return render(request, template_name, context)
 
