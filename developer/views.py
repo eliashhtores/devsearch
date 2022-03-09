@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Developer
-from .forms import CustomUserCreationForm, DeveloperForm
+from .forms import CustomUserCreationForm, DeveloperForm, SkillForm
 
 
 def login_user(request):
@@ -90,4 +90,20 @@ def edit_account(request):
 
     context = {'form': form}
     template_name = 'developer/edit_account.html'
+    return render(request, template_name, context)
+
+
+@login_required(login_url='developer:login')
+def create_skill(request):
+    form = SkillForm()
+    # form = SkillForm(instance=request.user.developer)
+    # if request.method == 'POST':
+    #     form = SkillForm(request.POST, instance=request.user.developer)
+    #     if form.is_valid():
+    #         form.save()
+    #         messages.success(request, 'Account was updated')
+    #         return redirect('developer:account')
+
+    context = {'form': form}
+    template_name = 'developer/skill_form.html'
     return render(request, template_name, context)

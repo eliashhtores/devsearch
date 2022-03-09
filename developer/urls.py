@@ -11,4 +11,5 @@ urlpatterns = [
     path('edit-account/', views.edit_account, name='edit_account'),
     path('', views.profiles, name='profiles'),
     path('profile/<str:pk>', views.profile, name='profile'),
+    path('add-skill/', views.create_skill, name='add_skill'),
 ]
