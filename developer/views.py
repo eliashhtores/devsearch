@@ -96,14 +96,46 @@ def edit_account(request):
 @login_required(login_url='developer:login')
 def create_skill(request):
     form = SkillForm()
-    # form = SkillForm(instance=request.user.developer)
-    # if request.method == 'POST':
-    #     form = SkillForm(request.POST, instance=request.user.developer)
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.success(request, 'Account was updated')
-    #         return redirect('developer:account')
+    developer = request.user.developer
+    if request.method == 'POST':
+        form = SkillForm(request.POST)
+        if form.is_valid():
+            skill = form.save(commit=False)
+            skill.developer = developer
+            skill.save()
+            messages.success(request, 'Skill was created')
+            return redirect('developer:account')
 
     context = {'form': form}
     template_name = 'developer/skill_form.html'
+    return render(request, template_name, context)
+
+
+@login_required(login_url='developer:login')
+def edit_skill(request, pk):
+    developer = request.user.developer
+    skill = developer.skill_set.get(pk=pk)
+    form = SkillForm(instance=skill)
+    if request.method == 'POST':
+        form = SkillForm(request.POST, instance=skill)
+        if form.is_valid():
+            skill.save()
+            messages.success(request, 'Skill was updated')
+            return redirect('developer:account')
+
+    context = {'form': form}
+    template_name = 'developer/skill_form.html'
+    return render(request, template_name, context)
+
+
+@login_required(login_url='developer:login')
+def delete_skill(request, pk):
+    developer = request.user.developer
+    skill = developer.skill_set.get(pk=pk)
+    if request.method == 'POST':
+        skill.delete()
+        messages.success(request, 'Skill was deleted')
+        return redirect('developer:account')
+    context = {'object': skill}
+    template_name = 'delete_template.html'
     return render(request, template_name, context)
