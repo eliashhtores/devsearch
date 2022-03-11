@@ -21,7 +21,12 @@ def search_project(request):
 
     if request.GET.get('search_query'):
         search_query = request.GET.get('search_query')
+    tags = Tag.objects.filter(name__icontains=search_query)
 
     project = Project.objects.distinct().filter(
-        Q(title__icontains=search_query) | Q(description__icontains=search_query)).order_by('-created')
+        Q(title__icontains=search_query) |
+        Q(description__icontains=search_query) |
+        Q(owner__name__icontains=search_query) |
+        Q(tags__in=tags)
+    ).order_by('-created')
     return project, search_query
