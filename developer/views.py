@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from utils import search_profile
 from .models import Developer
 from .forms import CustomUserCreationForm, DeveloperForm, SkillForm
 
@@ -52,9 +53,9 @@ def register(request):
 
 
 def profiles(request):
+    developers, search_query = search_profile(request)
     template_name = 'developer/profiles.html'
-    developers = Developer.objects.all()
-    context = {'developers': developers}
+    context = {'developers': developers, 'search_query': search_query}
     return render(request, template_name, context)
 
 
