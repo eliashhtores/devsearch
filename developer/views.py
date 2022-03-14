@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from utils import search_profile
+from utils import search_profile, paginate
 from .models import Developer
 from .forms import CustomUserCreationForm, DeveloperForm, SkillForm
 
@@ -54,8 +54,11 @@ def register(request):
 
 def profiles(request):
     developers, search_query = search_profile(request)
+    custom_range, developers = paginate(request, developers, 3)
+
     template_name = 'developer/profiles.html'
-    context = {'developers': developers, 'search_query': search_query}
+    context = {'developers': developers,
+               'search_query': search_query, 'custom_range': custom_range}
     return render(request, template_name, context)
 
 

@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from developer.models import Skill, Developer
 from project.models import Project, Tag
 
@@ -9,14 +10,34 @@ def search_profile(request):
     if request.GET.get('search_query'):
         search_query = request.GET.get('search_query')
 
-    skills = Skill.objects.filter(name__icontains=search_query)
+    skills = Skill.objects.filter(
+        name__icontains=search_query)
 
     developers = Developer.objects.distinct().filter(
-        Q(name__icontains=search_query) | Q(short_intro__icontains=search_query) | Q(skill__in=skills))
+        Q(name__icontains=search_query) | Q(short_intro__icontains=search_query) | Q(skill__in=skills)).order_by('user')
     return developers, search_query
 
 
-def search_project(request):
+def paginate(request, queryset, results):
+    page = request.GET.get('page', 1)
+    paginator = Paginator(queryset, results)
+
+    try:
+        queryset = paginator.page(page)
+    except PageNotAnInteger:
+        queryset = paginator.page(1)
+    except EmptyPage:
+        queryset = paginator.page(paginator.num_pages)
+
+    left_index = (int(page) - 3) if (int(page) - 3) > 0 else 1
+    right_index = (int(page) + 3) if (int(page) +
+                                      3) < paginator.num_pages else paginator.num_pages
+
+    custom_range = range(left_index, right_index + 1)
+    return custom_range, queryset
+
+
+def search_projects(request):
     search_query = ''
 
     if request.GET.get('search_query'):
