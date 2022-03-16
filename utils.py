@@ -49,5 +49,5 @@ def search_projects(request):
         Q(description__icontains=search_query) |
         Q(owner__name__icontains=search_query) |
         Q(tags__in=tags)
-    ).order_by('-created')
+    ).order_by('-vote_ratio', '-vote_total', 'title')
     return project, search_query

@@ -22,6 +22,21 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+    # TODO: Use a manager instead
+    @property
+    def reviewers(self):
+        return self.review_set.all().values_list('developer__id', flat=True)
+
+    @property
+    def get_vote_count(self):
+        reviews = self.review_set.all()
+        up_votes = reviews.filter(value=Review.UP).count()
+        total_votes = reviews.count()
+        ratio = (up_votes/total_votes) * 100
+        self.vote_total = total_votes
+        self.vote_ratio = ratio
+        self.save()
+
 
 class Review(models.Model):
     UP = 'up'
@@ -34,7 +49,8 @@ class Review(models.Model):
 
     id = models.UUIDField(default=uuid.uuid4,
                           primary_key=True, unique=True, editable=False)
-    # Owner
+    developer = models.ForeignKey(
+        Developer, null=True, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     body = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
@@ -42,6 +58,9 @@ class Review(models.Model):
 
     def __str__(self):
         return f'{self.project} - {self.value}'
+
+    class Meta:
+        unique_together = [['developer', 'project']]
 
 
 class Tag(models.Model):

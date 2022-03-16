@@ -7,6 +7,13 @@
     <div class="container">
         <div class="layout">
             <div class="column column--1of3">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert  alert--{{message.tags}}">
+                    <p class="alert__message">{{message}}</p>
+                </div>
+                {% endfor %}
+                {% endif %}
                 <h3 class="singleProject__subtitle">Tools & Stacks</h3>
                 <div class="singleProject__toolStack">
                     {% for tag in project.tags.all %}
@@ -46,47 +53,59 @@
                         Vote{{project.vote_total|pluralize:"s"}})
                     </h5>
 
-                    <form class="form" action="#" method="POST">
-                        <!-- Textarea -->
+                    {% if request.user.developer.id in project.reviewers %}
+                    <div class="alert alert--info">
+                        <p class="alert__message">
+                            You have already reviewed this project.
+                        </p>
+                    </div>
+                    {% elif request.user.developer == project.owner %}
+                    <div class="alert alert--info">
+                        <p class="alert__message">
+                            You cannot review your own project.</p>
+                    </div>
+                    {% elif not request.user.is_authenticated %}
+                    <div class="alert alert--info">
+                        <p class="alert__message">
+                            You must be logged in to review projects.
+                        </p>
+                    </div>
+                    <br>
+                    <a href="{% url 'developer:login' %}?next={{ request.path }}">Please login</a>
+                    {% else %}
+                    <!-- TODO Fix label -->
+                    <form class="form" action="{% url 'project:project' project.id %}" method="POST">
+                        {% csrf_token %}
+                        {% for field in form %}
                         <div class="form__field">
-                            <label for="formInput#textarea">Comments: </label>
-                            <textarea class="input input--textarea" name="message" id="formInput#textarea"
-                                placeholder="Write your comments here..."></textarea>
+                            <label for="formInput#textarea">{{ field.label }}</label>
+                            {{ field.label }}
+                            <br>
+                            {{ field }}
                         </div>
+                        {% endfor %}
                         <input class="btn btn--sub btn--lg" type="submit" value="Comments" />
                     </form>
+                    {% endif %}
                     <div class="commentList">
+                        {% for review in project.review_set.all %}
+                        {% if review.body %}
                         <div class="comment">
-                            <a href="#">
-                                <img class="avatar avatar--md"
-                                    src="https://pbs.twimg.com/profile_images/1335382240931368961/b3wSZKj4_400x400.jpg"
+                            <a href="{% url 'developer:profile' review.developer.id %}">
+                                <img class="avatar avatar--md" src="{{ review.developer.profile_image.url }}"
                                     alt="user" />
                             </a>
                             <div class="comment__details">
-                                <a href="#" class="comment__author">Sulamita Ivanov</a>
+                                <a href="{% url 'developer:profile' review.developer.id %}" class="comment__author">
+                                    {{review.developer.name }}
+                                </a>
                                 <p class="comment__info">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit alias numquam
-                                    perferendis
-                                    mollitia minus minima exercitationem possimus ab deserunt qui, soluta iusto
-                                    doloribus eveniet
-                                    similique consequuntur ratione, dignissimos ut magni laborum quo.
+                                    {{ review.body|linebreaksbr }}
                                 </p>
                             </div>
                         </div>
-                        <div class="comment">
-                            <a href="#">
-                                <img class="avatar avatar--md" src="https://avatars.githubusercontent.com/u/33843378"
-                                    alt="user" />
-                            </a>
-                            <div class="comment__details">
-                                <a href="#" class="comment__author">Dennis Ivanov</a>
-                                <p class="comment__info">
-                                    Consectetur adipisicing elit. Reprehenderit alias numquam perferendis mollitia minus
-                                    minima
-                                    exercitationem possimus ab deserunt qui, ratione, dignissimos ut magni laborum quo.
-                                </p>
-                            </div>
-                        </div>
+                        {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>

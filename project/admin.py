@@ -10,7 +10,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('id', 'project', 'value', 'created')
+    list_display = ('id', 'project', 'value', 'developer')
     list_filter = ('project', 'value', 'created')
     search_fields = ('project', 'body')
     ordering = ('-created',)
