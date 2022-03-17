@@ -2,9 +2,15 @@
 
 {% block content %}
 
-<!-- Main Section -->
 <main class="profile my-md">
     <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert  alert--{{message.tags}}">
+            <p class="alert__message">{{message}}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
         <div class="layout">
             <div class="column column--1of3">
                 <div class="card text-center">
@@ -45,7 +51,11 @@
                             </li>
                             {% endif %}
                         </ul>
-                        <a href="#" class="btn btn--sub btn--lg">Send Message </a>
+                        {% if request.user.developer.id != developer.id %}
+                        <a href="{% url 'developer:create_message' developer.id %}" class="btn btn--sub btn--lg">
+                            Send Message
+                        </a>
+                        {% endif%}
                     </div>
                 </div>
             </div>

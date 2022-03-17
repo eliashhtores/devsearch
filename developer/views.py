@@ -3,8 +3,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from utils import search_profile, paginate
-from .models import Developer, Message
-from .forms import CustomUserCreationForm, DeveloperForm, SkillForm
+from .models import Developer
+from .forms import CustomUserCreationForm, DeveloperForm, SkillForm, MessageForm
 
 
 def login_user(request):
@@ -153,4 +153,43 @@ def inbox(request):
     context = {'messages_received': messages_received,
                'unread_count': unread_count}
     template_name = 'developer/inbox.html'
+    return render(request, template_name, context)
+
+
+@login_required(login_url='developer:login')
+def view_message(request, pk):
+    developer = request.user.developer
+    message = developer.messages.get(pk=pk)
+    if message.is_read == False:
+        message.is_read = True
+        message.save()
+    context = {'message': message}
+    template_name = 'developer/message.html'
+    return render(request, template_name, context)
+
+
+def create_message(request, pk):
+    receiver = Developer.objects.get(pk=pk)
+    form = MessageForm()
+
+    try:
+        sender = request.user.developer
+    except:
+        sender = None
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.receiver = receiver
+            if sender:
+                message.name = sender.name
+                message.email = sender.email
+            message.save()
+            messages.success(request, 'Your message was successfully sent!')
+            return redirect('developer:profile', pk=receiver.id)
+
+    context = {'form': form, 'receiver': receiver}
+    template_name = 'developer/message_form.html'
     return render(request, template_name, context)
