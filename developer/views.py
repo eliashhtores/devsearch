@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from utils import search_profile, paginate
-from .models import Developer
+from .models import Developer, Message
 from .forms import CustomUserCreationForm, DeveloperForm, SkillForm
 
 
@@ -14,7 +14,7 @@ def login_user(request):
         return redirect('developer:account')
 
     if request.method == 'POST':
-        username = request.POST['username']
+        username = request.POST['username'].lower()
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
@@ -142,4 +142,15 @@ def delete_skill(request, pk):
         return redirect('developer:account')
     context = {'object': skill}
     template_name = 'delete_template.html'
+    return render(request, template_name, context)
+
+
+@login_required(login_url='developer:login')
+def inbox(request):
+    developer = request.user.developer
+    messages_received = developer.messages.all()
+    unread_count = messages_received.filter(is_read=False).count()
+    context = {'messages_received': messages_received,
+               'unread_count': unread_count}
+    template_name = 'developer/inbox.html'
     return render(request, template_name, context)

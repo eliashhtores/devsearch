@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Developer, Skill
+from .models import Developer, Skill, Message
 
 
 class DeveloperAdmin(admin.ModelAdmin):
@@ -16,5 +16,12 @@ class SkillAdmin(admin.ModelAdmin):
     search_fields = ('developer', 'name', 'description')
 
 
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'receiver', 'name', 'email', 'subject')
+    list_filter = ('sender', 'receiver', 'name', 'email', 'subject')
+    search_fields = ('sender', 'receiver', 'name', 'email', 'subject', 'body')
+
+
 admin.site.register(Developer, DeveloperAdmin)
 admin.site.register(Skill, SkillAdmin)
+admin.site.register(Message, MessageAdmin)
