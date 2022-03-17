@@ -67,11 +67,12 @@
                     {% elif not request.user.is_authenticated %}
                     <div class="alert alert--info">
                         <p class="alert__message">
-                            You must be logged in to review projects.
+                            <a href="{% url 'developer:login' %}?next={{ request.path }}">
+                                You must be logged in to review projects, please login by clicking here
+                            </a>
                         </p>
                     </div>
                     <br>
-                    <a href="{% url 'developer:login' %}?next={{ request.path }}">Please login</a>
                     {% else %}
                     <!-- TODO Fix label -->
                     <form class="form" action="{% url 'project:project' project.id %}" method="POST">

@@ -19,7 +19,7 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('developer:account')
+            return redirect(request.GET['next'] if 'next' in request.GET else 'developer:account')
         else:
             messages.error(request, 'Invalid credentials')
 
