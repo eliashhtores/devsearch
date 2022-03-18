@@ -1,3 +1,6 @@
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 def create_developer(sender, instance, created, **kwargs):
     from developer.models import Developer
@@ -8,6 +11,17 @@ def create_developer(sender, instance, created, **kwargs):
             username=user.username,
             email=user.email,
             name=user.first_name + ' ' + user.last_name,
+        )
+
+        subject = 'Welcome to DevSearch'
+        message = 'We are glad you are here!'
+
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [developer.email],
+            fail_silently=False,
         )
         return developer
 

@@ -22,7 +22,6 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
-    # TODO: Use a manager instead
     @property
     def reviewers(self):
         return self.review_set.all().values_list('developer__id', flat=True)

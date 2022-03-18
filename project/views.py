@@ -8,7 +8,7 @@ from .forms import ProjectForm, ReviewForm
 
 def projects(request):
     projects, search_query = search_projects(request)
-    custom_range, projects = paginate(request, projects, 3)
+    custom_range, projects = paginate(request, projects, 4)
 
     context = {'projects': projects,
                'search_query': search_query, 'custom_range': custom_range}
