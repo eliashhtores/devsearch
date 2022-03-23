@@ -74,14 +74,11 @@
                     </div>
                     <br>
                     {% else %}
-                    <!-- TODO Fix label -->
-                    <form class="form" action="{% url 'project:project' project.id %}" method="POST">
+                    <form action="{% url 'project:project' project.id %}" method="POST">
                         {% csrf_token %}
                         {% for field in form %}
                         <div class="form__field">
                             <label for="formInput#textarea">{{ field.label }}</label>
-                            {{ field.label }}
-                            <br>
                             {{ field }}
                         </div>
                         {% endfor %}
