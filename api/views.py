@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .serializers import ProjectSerializer
-from project.models import Project
+from project.models import Project, Review
 
 
 @api_view(['GET'])
@@ -25,6 +25,14 @@ def project_vote(request, pk):
     project = Project.objects.get(pk=pk)
     user = request.user.developer
     data = request.data
-    print(data)
+    review, created = Review.objects.get_or_create(
+        project=project,
+        developer=user,
+    )
+
+    review.value = data['value']
+    review.save()
+    project.get_vote_count
+
     serializer = ProjectSerializer(project, many=False)
     return Response(serializer.data)
