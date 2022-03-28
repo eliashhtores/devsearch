@@ -19,6 +19,9 @@ class Project(models.Model):
     vote_ratio = models.IntegerField(default=0, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-vote_ratio']
+
     def __str__(self):
         return self.title
 
