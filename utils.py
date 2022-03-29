@@ -14,7 +14,7 @@ def search_profile(request):
         name__icontains=search_query)
 
     developers = Developer.objects.distinct().filter(
-        Q(name__icontains=search_query) | Q(short_intro__icontains=search_query) | Q(skill__in=skills)).order_by('user')
+        Q(name__icontains=search_query) | Q(short_intro__icontains=search_query) | Q(skill__in=skills)).order_by('name')
     return developers, search_query
 
 

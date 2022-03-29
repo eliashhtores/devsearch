@@ -54,7 +54,7 @@ def register(request):
 
 def profiles(request):
     developers, search_query = search_profile(request)
-    custom_range, developers = paginate(request, developers, 4)
+    custom_range, developers = paginate(request, developers, 6)
 
     template_name = 'developer/profiles.html'
     context = {'developers': developers,
