@@ -6,7 +6,7 @@
 <main class="formPage my-xl">
     <div class="content-box">
         <div class="formWrapper">
-            <a class="backButton" href="{% url 'project:projects' %}"><i class="im im-angle-left"></i></a>
+            <a class="backButton" href="{% url 'developer:account' %}"><i class="im im-angle-left"></i></a>
             <br>
 
             <form class="form" method="POST" enctype="multipart/form-data">
@@ -18,6 +18,12 @@
                     {{ field }}
                 </div>
                 {% endfor %}
+
+                <div id="form__field">
+                    <label for="formInput#text">Tags</label>
+                    <textarea class="input" placeholder="Add tags separated by commas here" name="newtags"></textarea>
+                </div>
+
                 <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
             </form>
 
