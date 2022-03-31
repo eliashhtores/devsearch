@@ -29,6 +29,12 @@ class Developer(models.Model):
     def __str__(self):
         return str(self.user.username)
 
+    @property
+    def image_url(self):
+        if self.profile_image and hasattr(self.profile_image, 'url'):
+            return self.profile_image.url
+        return '/static/images/profiles/user-default.png'
+
 
 post_save.connect(create_developer, sender=User)
 post_save.connect(update_user, sender=Developer)

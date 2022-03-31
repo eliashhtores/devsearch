@@ -26,6 +26,12 @@ class Project(models.Model):
         return self.title
 
     @property
+    def image_url(self):
+        if self.featured_image and hasattr(self.featured_image, 'url'):
+            return self.featured_image.url
+        return '/static/images/default.jpg'
+
+    @property
     def reviewers(self):
         return self.review_set.all().values_list('developer__id', flat=True)
 
