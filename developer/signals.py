@@ -38,4 +38,7 @@ def update_user(sender, instance, created, **kwargs):
 
 
 def delete_developer(sender, instance, **kwargs):
-    instance.user.delete()
+    try:
+        instance.user.delete()
+    except:
+        pass
