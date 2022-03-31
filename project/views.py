@@ -71,7 +71,7 @@ def update_project(request, pk):
                 project.tags.add(tag)
             return redirect('developer:account')
 
-    context = {'form': form}
+    context = {'form': form, 'project': project}
     template = 'project/project_form.html'
     return render(request, template, context)
 

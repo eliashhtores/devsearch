@@ -1,5 +1,5 @@
 {% extends 'main.html'%}
-
+{% load static%}
 {% block content %}
 
 <!-- Main Section -->
@@ -20,6 +20,15 @@
                 {% endfor %}
 
                 <div id="form__field">
+                    {% for tag in project.tags.all %}
+                    <div class="tag tag--pill tag--main project-tag" data-tag="{{ tag.id }}"
+                        data-project="{{ project.id }}">
+                        {{ tag.name }} &#215;
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div id="form__field">
                     <label for="formInput#text">Tags</label>
                     <textarea class="input" placeholder="Add tags separated by commas here" name="newtags"></textarea>
                 </div>
@@ -30,5 +39,7 @@
         </div>
     </div>
 </main>
+
+<script src="{% static 'js/project_form.js' %}"></script>
 
 {% endblock content %}
