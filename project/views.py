@@ -44,8 +44,12 @@ def create_project(request):
         if form.is_valid():
             project = form.save(commit=False)
             project.owner = developer
-            form.save()
-            return redirect('project:projects')
+            project.save()
+            newtags = request.POST.get('newtags', '').replace(',', ' ').split()
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                project.tags.add(tag)
+            return redirect('developer:account')
 
     context = {'form': form}
     template = 'project/project_form.html'
