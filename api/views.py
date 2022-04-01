@@ -39,10 +39,9 @@ def project_vote(request, pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def remove_tag(request):
     tag = Tag.objects.get(pk=request.data['tag_id'])
     project = Project.objects.get(pk=request.data['project_id'])
     project.tags.remove(tag)
     project.save()
-    return Response(status='200')
+    return Response({'status': 200})
