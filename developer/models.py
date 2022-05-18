@@ -6,8 +6,9 @@ from .signals import create_developer, delete_developer, update_user
 
 
 class Developer(models.Model):
-    id = models.UUIDField(default=uuid.uuid4,
-                          primary_key=True, unique=True, editable=False)
+    id = models.UUIDField(
+        default=uuid.uuid4, primary_key=True, unique=True, editable=False
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200, blank=True, null=True)
     email = models.EmailField(max_length=200, blank=True, null=True)
@@ -16,7 +17,8 @@ class Developer(models.Model):
     short_intro = models.CharField(max_length=200, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     profile_image = models.ImageField(
-        upload_to='profiles/', blank=True, null=True, default='profiles/user-default.png')
+        upload_to='profiles/', blank=True, null=True, default='profiles/user-default.png'
+    )
     social_github = models.CharField(max_length=200, blank=True, null=True)
     social_twitter = models.CharField(max_length=200, blank=True, null=True)
     social_linkedin = models.CharField(max_length=200, blank=True, null=True)
@@ -42,8 +44,9 @@ post_delete.connect(delete_developer, sender=Developer)
 
 
 class Skill(models.Model):
-    id = models.UUIDField(default=uuid.uuid4,
-                          primary_key=True, unique=True, editable=False)
+    id = models.UUIDField(
+        default=uuid.uuid4, primary_key=True, unique=True, editable=False
+    )
     developer = models.ForeignKey(Developer, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -54,10 +57,12 @@ class Skill(models.Model):
 
 
 class Message(models.Model):
-    id = models.UUIDField(default=uuid.uuid4,
-                          primary_key=True, unique=True, editable=False)
+    id = models.UUIDField(
+        default=uuid.uuid4, primary_key=True, unique=True, editable=False
+    )
     sender = models.ForeignKey(
-        Developer, on_delete=models.CASCADE, null='True', blank=True)
+        Developer, on_delete=models.CASCADE, null='True', blank=True
+    )
     receiver = models.ForeignKey(
         Developer, on_delete=models.CASCADE, null='True', blank=True, related_name='messages')
     name = models.CharField(max_length=200, blank=True, null=True)
