@@ -153,7 +153,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-if os.getcwd() == '/app':
+if env('ENV') == 'PROD':
     DEFAULT_FILE_STORAGE = env('DEFAULT_FILE_STORAGE')
     AWS_QUERYSTRING_AUTH = False
     AWS_S3_FILE_OVERWRITE = False
