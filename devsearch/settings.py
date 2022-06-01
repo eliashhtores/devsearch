@@ -1,14 +1,22 @@
 from unipath import Path
 from datetime import timedelta
 import os
+import environ
 
-BASE_DIR = Path(__file__).ancestor(2)
+env = environ.Env(DEBUG=(bool, False))
 
-SECRET_KEY = 'django-insecure-cozmuqj+ezs3j=ial$=jc@y2!xij605_d9(q7^_m8rtkl-xz4x'
+# Set the project base directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEBUG = True
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-ALLOWED_HOSTS = []
+# False if not in os.environ because of casting above
+DEBUG = env('DEBUG')
+
+SECRET_KEY = env('SECRET_KEY')
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'devsearch-mx.herokuapp.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -19,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'storages',
     'project',
     'developer',
 
@@ -65,6 +74,7 @@ SIMPLE_JWT = {
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -94,14 +104,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'devsearch.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'devsearch',
-        'USER': 'postgres',
-        'PASSWORD': 'hosqkx91',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': env.db()
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -131,13 +134,12 @@ USE_TZ = True
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# TODO: Change to your own email address and use a .env file
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 STATIC_URL = '/static/'
 
